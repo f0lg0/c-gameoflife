@@ -7,11 +7,13 @@
 #define ROWS 30
 #define COLS 80
 
+typedef int Board[ROWS][COLS];
+
 /** 
  * randomly populates the board with either a 0 or a 1 
  * @param board a 2D Array of size [ROWS][COLS]
 */
-void populateBoard(int board[ROWS][COLS]) {
+void populateBoard(Board board) {
 	for (int i = 0; i < ROWS; i++)
 		for (int j = 0; j < COLS; j++)
          	board[i][j] = rand() % 2;  
@@ -23,7 +25,7 @@ void populateBoard(int board[ROWS][COLS]) {
  * @param x x position of a cell on the board
  * @param y y position of a cell on the board
 */
-int countNeighbors(int board[ROWS][COLS], int x, int y) {
+int countNeighbors(Board board, int x, int y) {
 	int sum = 0;
 
 	for (int i = -1; i < 2; i++) {
@@ -46,7 +48,7 @@ int countNeighbors(int board[ROWS][COLS], int x, int y) {
  * @param board a 2D Array of size [ROWS][COLS]
  * @param next another 2D Array of size [ROWS][COLS] where we will compute the new values
 */
-void computeNewGen(int board[ROWS][COLS], int next[ROWS][COLS]) {
+void computeNewGen(Board board, Board next) {
 	for (int i = 0; i < ROWS; i++) {
 		for (int j = 0; j < COLS; j++) {
 			int state = board[i][j];
@@ -69,7 +71,7 @@ void computeNewGen(int board[ROWS][COLS], int next[ROWS][COLS]) {
  * prints the board using special characters
  * @param board a 2D Array of size [ROWS][COLS]
 */
-void printBoard(int board[ROWS][COLS]) {
+void printBoard(Board board) {
    	for (int i = 0; i < ROWS; i++) {
 		for (int j = 0; j < COLS; j++) {
 			if (board[i][j] == 1) {
@@ -90,7 +92,7 @@ int main() {
 	 * * gen 0: 
 	 * generating a randomly populated board 
 	*/
-	int board[ROWS][COLS];
+	Board board;
 	populateBoard(board);
 
 	/**
@@ -98,16 +100,16 @@ int main() {
 	 * copying board cells to another board (next)
 	 * we will compute the next gen in "next"
 	*/
-	int next[ROWS][COLS];
+	Board next;
 	memcpy(next, board, sizeof(board));
 
 	/**
 	 * * gen 0:
-	 * creating pointers to the boards (type: ‘int (*)[COLS]’)
+	 * creating pointers to the boards
 	 * this way we avoid using memcpy later on in the code 
 	*/
-	int (*pboard)[COLS] = board;
-	int (*pnext)[COLS] = next; 
+	Board *pboard = &board;
+	Board *pnext = &next; 
 
 	while (1) {
 		system("clear");
@@ -122,7 +124,7 @@ int main() {
 		 * We don't really need to assign to "next" those specific values, we could even 
 		 * make it point to an empty board. Swapping them avoids allocating more memory. 
 		*/
-		int (*temp)[COLS] = pboard;
+		Board *temp = pboard;
 		pboard = pnext;
 		pnext = temp;
 
