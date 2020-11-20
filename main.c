@@ -113,10 +113,10 @@ int main() {
 
 	while (1) {
 		system("clear");
-		printBoard(pboard);
+		printBoard(*pboard);
 
 		// computing the next gen
-		computeNewGen(pboard, pnext);
+		computeNewGen(*pboard, *pnext);
 		
 		/**
 		 * swapping the boards: "board" gets the computed value
